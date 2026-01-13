@@ -21,8 +21,9 @@ if (ENV.NODE_ENV === "production") {
   // Serve static files from React build
   app.use(express.static(path.join(__dirname, "../frontend/dist")));
 
-  // Catch-all route to send index.html
-  app.get("/*", (req, res) => {
+  // Catch-all route to send index.html (Express 5+ compatible)
+  // This matches "/" as well as any nested path
+  app.get("/{*splat}", (req, res) => {
     res.sendFile(path.join(__dirname, "../frontend/dist/index.html"));
   });
 }
