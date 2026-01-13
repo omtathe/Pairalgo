@@ -1,39 +1,32 @@
 import express from "express";
-import path from "path"
+import path from "path";
 import { ENV } from "./lib/env.js";
 
 const app = express();
 
-const __dirname = path.resolve()
+// __dirname equivalent for ES modules
+const __dirname = path.resolve();
 
+// API Routes
+app.get("/health", (req, res) => {
+  res.status(200).json({ msg: "API is running" });
+});
 
-app.get("/health",(req,res) => {
-    res.status(200).json({msg:"api is running"})
-} );
+app.get("/books", (req, res) => {
+  res.status(200).json({ msg: "This is the books endpoint" });
+});
 
-app.get("/books",(req,res) => {
-    res.status(200).json({msg:"this is the books endpoint"})
-} );
+// Serve React frontend in production
+if (ENV.NODE_ENV === "production") {
+  // Serve static files from React build
+  app.use(express.static(path.join(__dirname, "../frontend/dist")));
 
-
-// make our app ready for deployment
-if (ENV.NODE_ENV ="production")
-{   
-    app.use(express.static(path.join(__dirname,"../frontend/dist")))
-   
-    app.get("*",(req,res) => {
-        res.sendFile(path.join(__dirname,"../frontend/dist/index.html"))
-    });
-
+  // Catch-all route to send index.html
+  app.get("/*", (req, res) => {
+    res.sendFile(path.join(__dirname, "../frontend/dist/index.html"));
+  });
 }
 
 const PORT = process.env.PORT || 10000;
 
-app.listen(PORT, () => {
-    console.log("Server running on port", PORT);
-});
-
-fetch(import.meta.env.VITE_API_URL + "/api/data")
-  .then(res => res.json())
-  .then(data => console.log(data));
-
+app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
