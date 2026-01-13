@@ -17,14 +17,19 @@ app.get("/books",(req,res) => {
 
 
 // make our app ready for deployment
-if(ENV.NODE_ENV ="production")
+if (ENV.NODE_ENV ="production")
 {   
     app.use(express.static(path.join(__dirname,"../frontend/dist")))
    
-    app.get("/{*any}",(req,res) => {
+    app.get("*",(req,res) => {
         res.sendFile(path.join(__dirname,"../frontend","dist","index.html"))
     });
 
 }
 
-app.listen(ENV.PORT,() => console.log("Server is running on port 3000", ENV.PORT));
+const PORT = process.env.PORT || 10000;
+
+app.listen(PORT, () => {
+    console.log("Server running on port", PORT);
+});
+
