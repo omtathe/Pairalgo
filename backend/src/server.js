@@ -33,3 +33,7 @@ app.listen(PORT, () => {
     console.log("Server running on port", PORT);
 });
 
+fetch(import.meta.env.VITE_API_URL + "/api/data")
+  .then(res => res.json())
+  .then(data => console.log(data));
+
